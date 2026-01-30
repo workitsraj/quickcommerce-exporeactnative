@@ -36,41 +36,63 @@ walletSchema.pre('save', function(next) {
 });
 
 walletSchema.methods.addBalance = async function(amount, description, referenceId) {
-  this.balance += amount;
-  await this.save();
+  // Use atomic update to prevent race conditions
+  const Wallet = this.constructor;
+  const updated = await Wallet.findOneAndUpdate(
+    { _id: this._id },
+    { $inc: { balance: amount }, updatedAt: new Date() },
+    { new: true }
+  );
+  
+  if (!updated) {
+    throw new Error('Wallet not found');
+  }
   
   const WalletTransaction = require('./WalletTransaction');
   await WalletTransaction.create({
-    walletId: this._id,
-    userId: this.userId,
+    walletId: updated._id,
+    userId: updated.userId,
     type: 'CREDIT',
     amount,
     description,
     referenceId,
-    balanceAfter: this.balance,
+    balanceAfter: updated.balance,
   });
+  
+  // Update current instance
+  this.balance = updated.balance;
+  this.updatedAt = updated.updatedAt;
   
   return this;
 };
 
 walletSchema.methods.deductBalance = async function(amount, description, referenceId) {
-  if (this.balance < amount) {
+  // Use atomic update with condition to prevent race conditions
+  const Wallet = this.constructor;
+  const updated = await Wallet.findOneAndUpdate(
+    { _id: this._id, balance: { $gte: amount } },
+    { $inc: { balance: -amount }, updatedAt: new Date() },
+    { new: true }
+  );
+  
+  if (!updated) {
     throw new Error('Insufficient wallet balance');
   }
   
-  this.balance -= amount;
-  await this.save();
-  
   const WalletTransaction = require('./WalletTransaction');
   await WalletTransaction.create({
-    walletId: this._id,
-    userId: this.userId,
+    walletId: updated._id,
+    userId: updated.userId,
     type: 'DEBIT',
     amount,
     description,
     referenceId,
-    balanceAfter: this.balance,
+    balanceAfter: updated.balance,
   });
+  
+  // Update current instance
+  this.balance = updated.balance;
+  this.updatedAt = updated.updatedAt;
   
   return this;
 };

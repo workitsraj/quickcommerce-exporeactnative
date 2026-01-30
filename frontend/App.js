@@ -10,6 +10,7 @@ import WalletTransactionsScreen from './src/screens/WalletTransactionsScreen';
 
 const Stack = createStackNavigator();
 
+// TODO: Move to environment configuration
 const STRIPE_PUBLISHABLE_KEY = 'your_stripe_publishable_key'; // Replace with actual key
 
 export default function App() {

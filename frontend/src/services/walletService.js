@@ -21,6 +21,11 @@ class WalletService {
 
   async addMoney(amount, description = 'Money added to wallet', referenceId = null) {
     try {
+      // Input validation
+      if (!amount || typeof amount !== 'number' || amount <= 0) {
+        throw new Error('Valid positive amount is required');
+      }
+      
       const response = await apiClient.post('/wallet/add-money', {
         amount,
         description,

@@ -7,7 +7,8 @@ const { webhookLimiter } = require('../middleware/rateLimiter');
 router.use(webhookLimiter);
 
 // Webhook routes - no authentication as they come from payment gateways
-router.post('/razorpay', express.raw({ type: 'application/json' }), webhookController.razorpayWebhook);
-router.post('/stripe', express.raw({ type: 'application/json' }), webhookController.stripeWebhook);
+// Note: Raw body parsing is handled in server.js for webhook routes
+router.post('/razorpay', webhookController.razorpayWebhook);
+router.post('/stripe', webhookController.stripeWebhook);
 
 module.exports = router;

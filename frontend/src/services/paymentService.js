@@ -3,6 +3,20 @@ import apiClient from './api';
 class PaymentService {
   async initiatePayment(orderId, amount, paymentMethod, paymentGateway, metadata = {}) {
     try {
+      // Input validation
+      if (!orderId || typeof orderId !== 'string') {
+        throw new Error('Valid orderId is required');
+      }
+      if (!amount || typeof amount !== 'number' || amount <= 0) {
+        throw new Error('Valid positive amount is required');
+      }
+      if (!paymentMethod || typeof paymentMethod !== 'string') {
+        throw new Error('Valid paymentMethod is required');
+      }
+      if (!paymentGateway || typeof paymentGateway !== 'string') {
+        throw new Error('Valid paymentGateway is required');
+      }
+
       const response = await apiClient.post('/payments/initiate', {
         orderId,
         amount,

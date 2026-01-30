@@ -77,10 +77,27 @@ class WalletController {
       const userId = req.userId;
       const { limit = 50, skip = 0 } = req.query;
 
+      const parsedLimit = parseInt(limit) || 50;
+      const parsedSkip = parseInt(skip) || 0;
+
+      if (parsedLimit < 1 || parsedLimit > 100) {
+        return res.status(400).json({
+          success: false,
+          message: 'Limit must be between 1 and 100',
+        });
+      }
+
+      if (parsedSkip < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Skip must be non-negative',
+        });
+      }
+
       const result = await walletService.getTransactionHistory(
         userId,
-        parseInt(limit),
-        parseInt(skip)
+        parsedLimit,
+        parsedSkip
       );
 
       res.status(200).json({
