@@ -1,0 +1,41 @@
+{
+  "name": "quickcommerce-mobile",
+  "version": "1.0.0",
+  "main": "expo-router",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-native": "0.74.1",
+    "expo": "~51.0.0",
+    "expo-router": "~3.5.0",
+    "expo-status-bar": "~1.12.1",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/stack": "^6.3.20",
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "react-native-safe-area-context": "4.10.1",
+    "react-native-screens": "3.31.1",
+    "axios": "^1.6.2",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo-image-picker": "~15.0.5",
+    "expo-location": "~17.0.1",
+    "react-native-maps": "1.14.0",
+    "@react-native-google-signin/google-signin": "^11.0.0",
+    "react-native-fbsdk-next": "^12.1.2",
+    "expo-apple-authentication": "~6.4.1",
+    "react-native-paper": "^5.11.3",
+    "formik": "^2.4.5",
+    "yup": "^1.3.3",
+    "react-native-vector-icons": "^10.0.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.45",
+    "typescript": "^5.1.3"
+  },
+  "private": true
+}
