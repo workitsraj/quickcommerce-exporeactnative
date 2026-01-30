@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const uploadController = require('../controllers/uploadController');
+const { uploadLimiter } = require('../middleware/rateLimiter');
 
 // Configure multer for memory storage (CSV files)
 const upload = multer({
@@ -18,9 +19,9 @@ const upload = multer({
   }
 });
 
-// Upload routes
-router.post('/products', upload.single('file'), uploadController.uploadProductsCSV);
-router.post('/inventory', upload.single('file'), uploadController.uploadInventoryCSV);
+// Upload routes with rate limiting
+router.post('/products', uploadLimiter, upload.single('file'), uploadController.uploadProductsCSV);
+router.post('/inventory', uploadLimiter, upload.single('file'), uploadController.uploadInventoryCSV);
 
 // Template download routes
 router.get('/templates/products', uploadController.downloadProductTemplate);
